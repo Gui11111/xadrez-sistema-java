@@ -2,7 +2,6 @@ package xadrez;
 
 import jogoTabuleiro.Tabuleiro;
 
-
 public class PartidaXadrez { // classe principal do sistema do jogo de xadrez
 
 	private Tabuleiro tabuleiro;
@@ -24,6 +23,13 @@ public class PartidaXadrez { // classe principal do sistema do jogo de xadrez
 		}
 		return mat;
 	}
+	
+	// método que recebe as coordenadas do xadrez
+		@SuppressWarnings("unused")
+		private void NovaPosicaoPeça(char coluna, int linha, PeçaXadrez peça) {
+			tabuleiro.PosicaoPeça(peça, new PosicaoXadrez(coluna, linha).toPosition()); // recebe uma linha e coluna só que converte para posicao de matriz
+		}
+		
 	private void ConfiguracaoInicial() {
 		/*NovaPosicaoPeça('c', 1, new Torre(tabuleiro, Cores.BRANCO));
 		NovaPosicaoPeça('c', 2, new Torre(tabuleiro, Cores.BRANCO));
