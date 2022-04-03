@@ -49,6 +49,23 @@ public class Tabuleiro {
 		peças[posicao.getLinha()][posicao.getColuna()] = peça;
 		peça.posicao = posicao;
 	}
+	
+	
+	public Peça removePeça(Posicao posicao) {
+		if(!posiçaoExistente(posicao)) {
+			throw new ExcecaoTabuleiro("Posição inexistente no tabuleiro ");
+		}
+		if(peça(posicao) == null) { // testar se a peça do tabuleiro nessa posicao é igual a nulo 
+			return null;
+		}
+		Peça aux = peça(posicao);
+		aux.posicao = null; //essa peça foi retirada do tabuleiro
+		peças [posicao.getLinha()][posicao.getColuna()] = null; //indica que nao tem mais peças nessa matriz
+		return aux;
+	}
+	
+	
+	
 	//método auxiliar 
 	private boolean posicaoExistente(int linha, int coluna) {
 		return linha >= 0 && linha < linhas && coluna >= 0 && coluna < colunas;
