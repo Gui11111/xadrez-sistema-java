@@ -43,9 +43,9 @@ public class Tabuleiro {
 	
 	// pega a matriz e na posiçao dada, atribuir a ela a peça que eu informei
 	public void PosicaoPeça(Peça peça, Posicao posicao) {
-		if(ExisteUmaPeça(posicao)) {
-			//throw new ExceçaoTabuleiro("Já existe uma peça nessa posição " + posicao);
-		}
+		/*if(ExisteUmaPeça(posicao)) {
+			throw new ExceçaoTabuleiro("Já existe uma peça nessa posição " + posicao);
+		}*/
 		peças[posicao.getLinha()][posicao.getColuna()] = peça;
 		peça.posicao = posicao;
 	}
