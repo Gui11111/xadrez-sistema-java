@@ -1,6 +1,8 @@
 package xadrez;
 
 import jogoTabuleiro.Tabuleiro;
+import xadrez.pecas.Rei;
+import xadrez.pecas.Torre;
 
 public class PartidaXadrez { // classe principal do sistema do jogo de xadrez
 
@@ -12,7 +14,7 @@ public class PartidaXadrez { // classe principal do sistema do jogo de xadrez
 		ConfiguracaoInicial();
 	}
 	
-	public PeçaXadrez[][] getPeças() { // método que retorna uma matriz correspondente a PartidaXadrez
+	public PeçaXadrez[][] getPeça() { // método que retorna uma matriz correspondente a PartidaXadrez
 		PeçaXadrez[][] mat = new PeçaXadrez[tabuleiro.getLinhas()] [tabuleiro.getColunas()];
 		
 		// percorrer a matriz de peças do tabuleiro
@@ -25,24 +27,24 @@ public class PartidaXadrez { // classe principal do sistema do jogo de xadrez
 	}
 	
 	// método que recebe as coordenadas do xadrez
-		@SuppressWarnings("unused")
+		
 		private void NovaPosicaoPeça(char coluna, int linha, PeçaXadrez peça) {
 			tabuleiro.PosicaoPeça(peça, new PosicaoXadrez(coluna, linha).toPosition()); // recebe uma linha e coluna só que converte para posicao de matriz
 		}
 		
 	private void ConfiguracaoInicial() {
-		/*NovaPosicaoPeça('c', 1, new Torre(tabuleiro, Cores.BRANCO));
-		NovaPosicaoPeça('c', 2, new Torre(tabuleiro, Cores.BRANCO));
-		NovaPosicaoPeça('d', 2,new Torre(tabuleiro, Cores.BRANCO));
-		NovaPosicaoPeça('e', 2, new Torre(tabuleiro, Cores.BRANCO));
-		NovaPosicaoPeça('e', 1, new Torre(tabuleiro, Cores.BRANCO));
-		NovaPosicaoPeça('d', 1,new Rei(tabuleiro, Cores.BRANCO));
+		NovaPosicaoPeça('c', 1, new Torre(tabuleiro, Cores.WHITE));
+		NovaPosicaoPeça('c', 2, new Torre(tabuleiro, Cores.WHITE));
+		NovaPosicaoPeça('d', 2, new Torre(tabuleiro, Cores.WHITE));
+		NovaPosicaoPeça('e', 2, new Torre(tabuleiro, Cores.WHITE));
+		NovaPosicaoPeça('e', 1, new Torre(tabuleiro, Cores.WHITE));
+		NovaPosicaoPeça('d', 1, new Rei(tabuleiro, Cores.WHITE));
 		
-		NovaPosicaoPeça('c', 7, new Torre(tabuleiro, Cores.PRETO));
-		NovaPosicaoPeça('c', 8, new Torre(tabuleiro, Cores.PRETO));
-		NovaPosicaoPeça('d', 7,new Torre(tabuleiro, Cores.PRETO));
-		NovaPosicaoPeça('e', 7, new Torre(tabuleiro, Cores.PRETO));
-		NovaPosicaoPeça('e', 8, new Torre(tabuleiro, Cores.PRETO));
-		NovaPosicaoPeça('d', 8,new Rei(tabuleiro, Cores.PRETO));*/
+		NovaPosicaoPeça('c', 7, new Torre(tabuleiro, Cores.BLACK));
+		NovaPosicaoPeça('c', 8, new Torre(tabuleiro, Cores.BLACK));
+		NovaPosicaoPeça('d', 7, new Torre(tabuleiro, Cores.BLACK));
+		NovaPosicaoPeça('e', 7, new Torre(tabuleiro, Cores.BLACK));
+		NovaPosicaoPeça('e', 8, new Torre(tabuleiro, Cores.BLACK));
+		NovaPosicaoPeça('d', 8, new Rei(tabuleiro, Cores.BLACK));
 	}
 }
