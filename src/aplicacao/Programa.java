@@ -1,6 +1,9 @@
 package aplicacao;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
+
+import xadrez.ExcecaoXadrez;
 import xadrez.PartidaXadrez;
 import xadrez.PeçaXadrez;
 import xadrez.PosicaoXadrez;
@@ -14,16 +17,27 @@ public class Programa {
 		
 		//função responsável por imprimir as peças da partida 
 		while (true) {
-			UI.printTabuleiro(partida.getPeça()); // user interface (UI) / imprimi o tabuleiro na tela 
-			System.out.println();
-			System.out.print("Origem: ");
-			PosicaoXadrez origem = UI.LerPosicaoXadrez(sc); // lê a posicao de origem
-			
-			System.out.println();
-			System.out.print("Destino: ");
-			PosicaoXadrez destino = UI.LerPosicaoXadrez(sc);
-			
-			PeçaXadrez peçaCapturada = partida.MovimentoXadrez(origem, destino);
+			try {
+				UI.LimpaTela(); //chamando o método LimpaTela
+				UI.printTabuleiro(partida.getPeça()); // user interface (UI) / imprimi o tabuleiro na tela 
+				System.out.println();
+				System.out.print("Origem: ");
+				PosicaoXadrez origem = UI.LerPosicaoXadrez(sc); // lê a posicao de origem
+				
+				System.out.println();
+				System.out.print("Destino: ");
+				PosicaoXadrez destino = UI.LerPosicaoXadrez(sc);
+				
+				PeçaXadrez peçaCapturada = partida.MovimentoXadrez(origem, destino);
+				}
+			catch (ExcecaoXadrez e) {
+				System.out.println(e.getMessage());
+				sc.nextLine();
+			}
+			catch (InputMismatchException e) {
+				System.out.println(e.getMessage());
+				sc.nextLine();
+			}
 		}
 		
 	}
