@@ -32,6 +32,7 @@ public class PartidaXadrez { // classe principal do sistema do jogo de xadrez
 		Posicao origem = posicaoOrigem.toPosition(); // converter para posicao da matriz
 		Posicao destino = posicaoDestino.toPosition();
 		validaPosicaoOrigem(origem);//validar se nessa posicao de origem existe uma peça 
+		validaPosicaoDestino(origem, destino);
 		Peça capturaPeça = fazerMover(origem, destino);
 		return (PeçaXadrez) capturaPeça;
 	}
@@ -51,6 +52,13 @@ public class PartidaXadrez { // classe principal do sistema do jogo de xadrez
 			throw new ExcecaoXadrez("Nao existe movimentos possiveis para a peca escolhida");
 		}
 	}
+	
+	private void validaPosicaoDestino(Posicao origem, Posicao destino) {
+		if(! tabuleiro.peça(origem).movimentoPossivel(destino)) {
+			throw new ExcecaoXadrez("A peca escolhida nao pode se mover para a posicao de destino");
+		}
+	}
+	
 	
 	// método que recebe as coordenadas do xadrez
 	private void NovaPosicaoPeça(char coluna, int linha, PeçaXadrez peça) {

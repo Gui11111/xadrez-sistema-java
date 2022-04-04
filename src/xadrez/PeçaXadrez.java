@@ -1,6 +1,7 @@
 package xadrez;
 
 import jogoTabuleiro.Peça;
+import jogoTabuleiro.Posicao;
 import jogoTabuleiro.Tabuleiro;
 
 public abstract class PeçaXadrez extends Peça{ // herança
@@ -15,5 +16,11 @@ public abstract class PeçaXadrez extends Peça{ // herança
 	// tem somente o get porque nao a cor da peça nao pode mudar
 	public Cores getCores() {
 		return cores;
+	}
+	
+	// testando se a cor da peça nessa posicao (adversaria) é diferente da cor da minha peça
+	protected boolean existePeçaAdversaria(Posicao posicao) {
+		PeçaXadrez p = (PeçaXadrez)getTabuleiro().peça(posicao);
+		return p != null && p.getCores() != cores;
 	}
 }
