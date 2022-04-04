@@ -3,7 +3,7 @@ package xadrez;
 import jogoTabuleiro.Peça;
 import jogoTabuleiro.Tabuleiro;
 
-public class PeçaXadrez extends Peça{ // herança
+public abstract class PeçaXadrez extends Peça{ // herança
 
 	private Cores cores;
 

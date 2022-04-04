@@ -6,7 +6,7 @@ import xadrez.PeçaXadrez;
 
 public class Rei extends PeçaXadrez {
 
-	//construtor
+	// construtor
 	public Rei(Tabuleiro tabuleiro, Cores cores) {
 		super(tabuleiro, cores);
 	}
@@ -14,5 +14,11 @@ public class Rei extends PeçaXadrez {
 	@Override
 	public String toString() {
 		return "R";
+	}
+
+	@Override
+	public boolean[][] movimentosPossiveis() {
+		boolean[][] mat = new boolean[getTabuleiro().getLinhas()][getTabuleiro().getColunas()];
+		return mat;
 	}
 }

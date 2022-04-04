@@ -45,7 +45,10 @@ public class PartidaXadrez { // classe principal do sistema do jogo de xadrez
 	
 	private void validaPosicaoOrigem(Posicao posicao) {
 		if(!tabuleiro.ExisteUmaPeça(posicao)) { // se nao existir uma peça nessa posicao eu vou dar uma exceção
-			throw new ExcecaoXadrez("Não existe peça na posicão de origem");
+			throw new ExcecaoXadrez("Nao existe peca na posicao de origem");
+		}
+		if(!tabuleiro.peça(posicao).ExisteAlgumMovimentoPossivel()) {
+			throw new ExcecaoXadrez("Nao existe movimentos possiveis para a peca escolhida");
 		}
 	}
 	
