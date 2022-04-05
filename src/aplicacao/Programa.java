@@ -19,7 +19,7 @@ public class Programa {
 		while (true) {
 			try {
 				UI.LimpaTela(); //chamando o método LimpaTela
-				UI.printTabuleiro(partida.getPeça()); // user interface (UI) / imprimi o tabuleiro na tela 
+				UI.printPartida(partida); // user interface (UI) / imprimi o tabuleiro na tela 
 				System.out.println();
 				System.out.print("Origem: ");
 				PosicaoXadrez origem = UI.LerPosicaoXadrez(sc); // lê a posicao de origem

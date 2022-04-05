@@ -8,12 +8,24 @@ import xadrez.pecas.Torre;
 
 public class PartidaXadrez { // classe principal do sistema do jogo de xadrez
 
+	private int turno;
+	private Cores jogadorAtual;
 	private Tabuleiro tabuleiro;
 
 	// construtor padrão
 	public PartidaXadrez() {
 		tabuleiro = new Tabuleiro(8, 8); // dimensão do tabuleiro
+		turno = 1;
+		jogadorAtual = Cores.WHITE;
 		ConfiguracaoInicial();
+	}
+	
+	public int getTurno() {
+		return turno;
+	}
+
+	public Cores getJogadorAtual() {
+		return jogadorAtual;
 	}
 
 	public PeçaXadrez[][] getPeça() { // método que retorna uma matriz correspondente a PartidaXadrez
@@ -42,6 +54,7 @@ public class PartidaXadrez { // classe principal do sistema do jogo de xadrez
 		validaPosicaoOrigem(origem);//validar se nessa posicao de origem existe uma peça 
 		validaPosicaoDestino(origem, destino);
 		Peça capturaPeça = fazerMover(origem, destino);
+		proximoTurno();
 		return (PeçaXadrez) capturaPeça;
 	}
 	
@@ -56,6 +69,9 @@ public class PartidaXadrez { // classe principal do sistema do jogo de xadrez
 		if(!tabuleiro.ExisteUmaPeça(posicao)) { // se nao existir uma peça nessa posicao eu vou dar uma exceção
 			throw new ExcecaoXadrez("Nao existe peca na posicao de origem");
 		}
+		if(jogadorAtual != ((PeçaXadrez)tabuleiro.peça(posicao)).getCores()) {
+			throw new ExcecaoXadrez("A peca escolhida nao e sua");
+		}
 		if(!tabuleiro.peça(posicao).ExisteAlgumMovimentoPossivel()) {
 			throw new ExcecaoXadrez("Nao existe movimentos possiveis para a peca escolhida");
 		}
@@ -67,6 +83,11 @@ public class PartidaXadrez { // classe principal do sistema do jogo de xadrez
 		}
 	}
 	
+	// método que troca o turno
+	private void proximoTurno() {
+		turno++;
+		jogadorAtual = (jogadorAtual == Cores.WHITE) ? Cores.BLACK : Cores.WHITE;
+	}
 	
 	// método que recebe as coordenadas do xadrez
 	private void NovaPosicaoPeça(char coluna, int linha, PeçaXadrez peça) {
