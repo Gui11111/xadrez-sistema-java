@@ -2,6 +2,8 @@ package xadrez;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import jogoTabuleiro.Peça;
 import jogoTabuleiro.Posicao;
@@ -14,6 +16,7 @@ public class PartidaXadrez { // classe principal do sistema do jogo de xadrez
 	private int turno;
 	private Cores jogadorAtual;
 	private Tabuleiro tabuleiro;
+	private boolean check;
 	
 	private List<Peça> peçasDoTabuleiro = new ArrayList<>();
 	private List<Peça> capturaPeças = new ArrayList<>();
@@ -33,6 +36,11 @@ public class PartidaXadrez { // classe principal do sistema do jogo de xadrez
 	public Cores getJogadorAtual() {
 		return jogadorAtual;
 	}
+
+	public boolean getCheck() {
+		return check;
+	}
+
 
 	public PeçaXadrez[][] getPeça() { // método que retorna uma matriz correspondente a PartidaXadrez
 		PeçaXadrez[][] mat = new PeçaXadrez[tabuleiro.getLinhas()][tabuleiro.getColunas()];
@@ -60,10 +68,22 @@ public class PartidaXadrez { // classe principal do sistema do jogo de xadrez
 		validaPosicaoOrigem(origem);//validar se nessa posicao de origem existe uma peça 
 		validaPosicaoDestino(origem, destino);
 		Peça capturaPeça = fazerMover(origem, destino);
+		
+		//testar se esse movimento colocou o próprio jogador em check;
+		if(testaCheck(jogadorAtual)) {
+			desfazerMovimento(origem, destino, capturaPeça);
+			throw new ExcecaoXadrez("Voce nao pode se colocar em check");
+		}
+		
+		//testar se o oponente ficou em check
+		check = (testaCheck(oponente(jogadorAtual))) ? true : false;
+		
+		
 		proximoTurno();
 		return (PeçaXadrez) capturaPeça;
 	}
 	
+	// método para fazer movimento
 	private Peça fazerMover(Posicao origem, Posicao destino) {
 		Peça p = tabuleiro.removePeça(origem);
 		Peça peçaCapturada = tabuleiro.removePeça(destino);
@@ -76,6 +96,20 @@ public class PartidaXadrez { // classe principal do sistema do jogo de xadrez
 		return peçaCapturada;
 	}
 	
+	
+	// método para desfazer movimento caso o usuário entre em xeque
+	
+	private void desfazerMovimento(Posicao origem, Posicao destino, Peça capturapeça) {
+		Peça p = tabuleiro.removePeça(destino); // tira a peça do destino 
+		tabuleiro.PosicaoPeça(p, origem); //devolve a peça do destino para a posicao de origem
+		
+		if(capturapeça != null) {
+			tabuleiro.PosicaoPeça(capturapeça, destino);
+			capturaPeças.remove(capturapeça);
+			peçasDoTabuleiro.add(capturapeça);
+		}
+		
+	}
 	private void validaPosicaoOrigem(Posicao posicao) {
 		if(!tabuleiro.ExisteUmaPeça(posicao)) { // se nao existir uma peça nessa posicao eu vou dar uma exceção
 			throw new ExcecaoXadrez("Nao existe peca na posicao de origem");
@@ -99,6 +133,40 @@ public class PartidaXadrez { // classe principal do sistema do jogo de xadrez
 		turno++;
 		jogadorAtual = (jogadorAtual == Cores.WHITE) ? Cores.BLACK : Cores.WHITE;
 	}
+	
+	//método devolve o oponente de uma cor
+	private Cores oponente(Cores cor) {
+		return (cor == Cores.WHITE) ? Cores.BLACK : Cores.WHITE;
+	}
+	
+	
+	// método para localizar o rei de uma determinada cor
+	private PeçaXadrez rei(Cores cor) {
+		//filtragem da lista
+		List<Peça> list = peçasDoTabuleiro.stream().filter(x -> ((PeçaXadrez)x).getCores() == cor).collect(Collectors.toList());
+		for(Peça p : list) {
+			if(p instanceof Rei) {
+				return (PeçaXadrez)p;
+			}
+		}
+		// se o conpilador nao encontrar lança uma exceçao
+		throw new IllegalStateException("Nao existe o rei da " + cor + " no tabuleiro");
+	}
+	
+	
+	//método para testar check
+	private boolean testaCheck(Cores cor) {
+		Posicao posicaoRei = rei(cor).getPosicaoXadrez().toPosition(); // pega a posicao do rei na posicao de matriz
+		List<Peça> oponentePeças = peçasDoTabuleiro.stream().filter(x -> ((PeçaXadrez)x).getCores() == oponente(cor)).collect(Collectors.toList());
+		for(Peça p : oponentePeças) {
+			boolean[][] mat = p.movimentosPossiveis(); //matriz de movimentos possiveis dessa peça adversária p
+			if(mat[posicaoRei.getLinha()][posicaoRei.getColuna()]) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	
 	// método que recebe as coordenadas do xadrez
 	private void NovaPosicaoPeça(char coluna, int linha, PeçaXadrez peça) {

@@ -18,6 +18,10 @@ public abstract class PeçaXadrez extends Peça{ // herança
 		return cores;
 	}
 	
+	public PosicaoXadrez getPosicaoXadrez() {
+		return PosicaoXadrez.fromPosition(posicao);
+	}
+	
 	// testando se a cor da peça nessa posicao (adversaria) é diferente da cor da minha peça
 	protected boolean existePeçaAdversaria(Posicao posicao) {
 		PeçaXadrez p = (PeçaXadrez)getTabuleiro().peça(posicao);
