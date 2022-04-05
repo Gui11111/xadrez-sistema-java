@@ -1,5 +1,8 @@
 package xadrez;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jogoTabuleiro.Peça;
 import jogoTabuleiro.Posicao;
 import jogoTabuleiro.Tabuleiro;
@@ -11,6 +14,9 @@ public class PartidaXadrez { // classe principal do sistema do jogo de xadrez
 	private int turno;
 	private Cores jogadorAtual;
 	private Tabuleiro tabuleiro;
+	
+	private List<Peça> peçasDoTabuleiro = new ArrayList<>();
+	private List<Peça> capturaPeças = new ArrayList<>();
 
 	// construtor padrão
 	public PartidaXadrez() {
@@ -62,6 +68,11 @@ public class PartidaXadrez { // classe principal do sistema do jogo de xadrez
 		Peça p = tabuleiro.removePeça(origem);
 		Peça peçaCapturada = tabuleiro.removePeça(destino);
 		tabuleiro.PosicaoPeça(p, destino);
+		
+		if(peçaCapturada != null) {
+			peçasDoTabuleiro.remove(peçaCapturada);
+			capturaPeças.add(peçaCapturada);
+		}
 		return peçaCapturada;
 	}
 	
@@ -91,8 +102,8 @@ public class PartidaXadrez { // classe principal do sistema do jogo de xadrez
 	
 	// método que recebe as coordenadas do xadrez
 	private void NovaPosicaoPeça(char coluna, int linha, PeçaXadrez peça) {
-		tabuleiro.PosicaoPeça(peça, new PosicaoXadrez(coluna, linha).toPosition()); // recebe uma linha e coluna só que
-																					// converte para posicao de matriz
+		tabuleiro.PosicaoPeça(peça, new PosicaoXadrez(coluna, linha).toPosition()); // recebe uma linha e coluna só que converte para posicao de matriz
+		peçasDoTabuleiro.add(peça);
 	}
 
 	private void ConfiguracaoInicial() {
