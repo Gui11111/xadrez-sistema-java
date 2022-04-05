@@ -19,7 +19,7 @@ public class Programa {
 		List<PeçaXadrez> captura = new ArrayList<>();
 		
 		//função responsável por imprimir as peças da partida 
-		while (true) {
+		while (!partida.getCheckMate()) {
 			try {
 				UI.LimpaTela(); //chamando o método LimpaTela
 				UI.printPartida(partida, captura); // user interface (UI) / imprimi o tabuleiro na tela 
@@ -49,6 +49,7 @@ public class Programa {
 				sc.nextLine();
 			}
 		}
-		
+		UI.LimpaTela();
+		UI.printPartida(partida, captura);
 	}
 }

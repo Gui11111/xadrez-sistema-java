@@ -2,7 +2,6 @@ package xadrez;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import jogoTabuleiro.Peça;
@@ -17,6 +16,7 @@ public class PartidaXadrez { // classe principal do sistema do jogo de xadrez
 	private Cores jogadorAtual;
 	private Tabuleiro tabuleiro;
 	private boolean check;
+	private boolean checkMate;
 	
 	private List<Peça> peçasDoTabuleiro = new ArrayList<>();
 	private List<Peça> capturaPeças = new ArrayList<>();
@@ -40,6 +40,11 @@ public class PartidaXadrez { // classe principal do sistema do jogo de xadrez
 	public boolean getCheck() {
 		return check;
 	}
+
+	public boolean getCheckMate() {
+		return checkMate;
+	}
+
 
 
 	public PeçaXadrez[][] getPeça() { // método que retorna uma matriz correspondente a PartidaXadrez
@@ -78,8 +83,14 @@ public class PartidaXadrez { // classe principal do sistema do jogo de xadrez
 		//testar se o oponente ficou em check
 		check = (testaCheck(oponente(jogadorAtual))) ? true : false;
 		
+		// se a jogada deixou o oponente em checkMate o jogo vai ter que aprar
+		if(testaCheckMate(oponente(jogadorAtual))) {
+			checkMate = true;
+		}
+		else {
+			proximoTurno();
+		}
 		
-		proximoTurno();
 		return (PeçaXadrez) capturaPeça;
 	}
 	
@@ -167,6 +178,32 @@ public class PartidaXadrez { // classe principal do sistema do jogo de xadrez
 		return false;
 	}
 	
+	//método para testar check mate
+	private boolean testaCheckMate(Cores cor) {
+		if(!testaCheck(cor)) {
+			return false;
+		}
+		List<Peça> list = peçasDoTabuleiro.stream().filter(x -> ((PeçaXadrez)x).getCores() == cor).collect(Collectors.toList());
+		for(Peça p : list) {
+			boolean[][] mat = p.movimentosPossiveis();
+			for(int i=0; i<tabuleiro.getLinhas(); i++) {
+				for(int j=0; j<tabuleiro.getColunas(); j++) {
+					if(mat[i][j]) {
+						Posicao origem = ((PeçaXadrez)p).getPosicaoXadrez().toPosition();
+						Posicao destino = new Posicao(i, j);
+						Peça peçaCapturada = fazerMover(origem, destino);
+						boolean testCheck = testaCheck(cor);
+						desfazerMovimento(origem, destino, peçaCapturada);
+						
+						if(!testCheck) {
+							return false;
+						}
+					}
+				}
+			}
+		}
+		return true;
+	}
 	
 	// método que recebe as coordenadas do xadrez
 	private void NovaPosicaoPeça(char coluna, int linha, PeçaXadrez peça) {
@@ -175,18 +212,11 @@ public class PartidaXadrez { // classe principal do sistema do jogo de xadrez
 	}
 
 	private void ConfiguracaoInicial() {
-		NovaPosicaoPeça('c', 1, new Torre(tabuleiro, Cores.WHITE));
-		NovaPosicaoPeça('c', 2, new Torre(tabuleiro, Cores.WHITE));
-		NovaPosicaoPeça('d', 2, new Torre(tabuleiro, Cores.WHITE));
-		NovaPosicaoPeça('e', 2, new Torre(tabuleiro, Cores.WHITE));
-		NovaPosicaoPeça('e', 1, new Torre(tabuleiro, Cores.WHITE));
-		NovaPosicaoPeça('d', 1, new Rei(tabuleiro, Cores.WHITE));
+		NovaPosicaoPeça('h', 7, new Torre(tabuleiro, Cores.WHITE));
+		NovaPosicaoPeça('d', 1, new Torre(tabuleiro, Cores.WHITE));
+		NovaPosicaoPeça('e', 1, new Rei(tabuleiro, Cores.WHITE));
 
-		NovaPosicaoPeça('c', 7, new Torre(tabuleiro, Cores.BLACK));
-		NovaPosicaoPeça('c', 8, new Torre(tabuleiro, Cores.BLACK));
-		NovaPosicaoPeça('d', 7, new Torre(tabuleiro, Cores.BLACK));
-		NovaPosicaoPeça('e', 7, new Torre(tabuleiro, Cores.BLACK));
-		NovaPosicaoPeça('e', 8, new Torre(tabuleiro, Cores.BLACK));
-		NovaPosicaoPeça('d', 8, new Rei(tabuleiro, Cores.BLACK));
+		NovaPosicaoPeça('b', 8, new Torre(tabuleiro, Cores.BLACK));
+		NovaPosicaoPeça('a', 8, new Rei(tabuleiro, Cores.BLACK));
 	}
 }
