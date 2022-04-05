@@ -28,6 +28,14 @@ public class PartidaXadrez { // classe principal do sistema do jogo de xadrez
 		return mat;
 	}
 	
+	//método que serve para imprimir as posições possiveis a a partir de uma posicao de origem na classe Programa
+	public boolean[][] movimentosPossiveis(PosicaoXadrez posicaoOrigem) {
+		Posicao posicao = posicaoOrigem.toPosition();
+		validaPosicaoOrigem(posicao);
+		return tabuleiro.peça(posicao).movimentosPossiveis();//retornar os movimentos possiveis dessa peça nessa posicao
+	}
+	
+	
 	public PeçaXadrez MovimentoXadrez(PosicaoXadrez posicaoOrigem, PosicaoXadrez posicaoDestino) {
 		Posicao origem = posicaoOrigem.toPosition(); // converter para posicao da matriz
 		Posicao destino = posicaoDestino.toPosition();

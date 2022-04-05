@@ -52,18 +52,34 @@ public class UI {
 		public static void printTabuleiro(PeçaXadrez[][] peças) {
 			for (int i=0; i<peças.length; i++) {
 				System.out.print((8 - i) + " ");
-				for (int j=0; j<peças.length;j++) {
-					PrintPeças(peças[i][j]); // imprimir a peça
+				for (int j=0; j<peças.length; j++) {
+					PrintPeças(peças[i][j], false); // imprimir a peça
 				}
 				System.out.println();
 			}
 			System.out.println("  a b c d e f g h");
 		}
 		
+		
+		public static void printTabuleiro(PeçaXadrez[][] peças, boolean[][] movimentosPossiveis) {
+			for (int i=0; i<peças.length; i++) {
+				System.out.print((8 - i) + " ");
+				for (int j=0; j<peças.length;j++) {
+					PrintPeças(peças[i][j], movimentosPossiveis[i][j]); // imprimir a peça e pinta o fundo colorido dependendo dessa variavel
+				}
+				System.out.println();
+			}
+			System.out.println("  a b c d e f g h");
+		}
+		
+		
 		//método auxiliar para imprimir somente uma peça
-		private static void PrintPeças(PeçaXadrez peça) { 
+		private static void PrintPeças(PeçaXadrez peça, boolean background) {
+			if(background) {
+				System.out.print(ANSI_BLUE_BACKGROUND);//mudar a cor do fundo da tela 
+			}
 			if (peça == null) { 
-				System.out.print("-");
+				System.out.print("-" + ANSI_RESET);
 			}
 			else {
 				if(peça.getCores() == Cores.WHITE) {
