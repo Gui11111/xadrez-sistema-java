@@ -96,7 +96,8 @@ public class PartidaXadrez { // classe principal do sistema do jogo de xadrez
 	
 	// método para fazer movimento
 	private Peça fazerMover(Posicao origem, Posicao destino) {
-		Peça p = tabuleiro.removePeça(origem);
+		PeçaXadrez p = (PeçaXadrez)tabuleiro.removePeça(origem);
+		p.aumentaContagemMovimentos();
 		Peça peçaCapturada = tabuleiro.removePeça(destino);
 		tabuleiro.PosicaoPeça(p, destino);
 		
@@ -111,9 +112,9 @@ public class PartidaXadrez { // classe principal do sistema do jogo de xadrez
 	// método para desfazer movimento caso o usuário entre em xeque
 	
 	private void desfazerMovimento(Posicao origem, Posicao destino, Peça capturapeça) {
-		Peça p = tabuleiro.removePeça(destino); // tira a peça do destino 
+		PeçaXadrez p = (PeçaXadrez)tabuleiro.removePeça(destino); // tira a peça do destino
+		p.diminuiContagemMovimentos();
 		tabuleiro.PosicaoPeça(p, origem); //devolve a peça do destino para a posicao de origem
-		
 		if(capturapeça != null) {
 			tabuleiro.PosicaoPeça(capturapeça, destino);
 			capturaPeças.remove(capturapeça);

@@ -7,6 +7,7 @@ import jogoTabuleiro.Tabuleiro;
 public abstract class PeçaXadrez extends Peça{ // herança
 
 	private Cores cores;
+	private int contagemMovimentos;
 
 	public PeçaXadrez(Tabuleiro tabuleiro, Cores cores) {
 		super(tabuleiro);
@@ -16,6 +17,18 @@ public abstract class PeçaXadrez extends Peça{ // herança
 	// tem somente o get porque nao a cor da peça nao pode mudar
 	public Cores getCores() {
 		return cores;
+	}
+	
+	public int getContagemMovimentos() {
+		return contagemMovimentos;
+	}
+
+	public void aumentaContagemMovimentos() {
+		contagemMovimentos++;
+	}
+	
+	public void diminuiContagemMovimentos() {
+		contagemMovimentos--;
 	}
 	
 	public PosicaoXadrez getPosicaoXadrez() {
