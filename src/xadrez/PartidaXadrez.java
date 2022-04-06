@@ -10,6 +10,7 @@ import jogoTabuleiro.Tabuleiro;
 import xadrez.pecas.Bispo;
 import xadrez.pecas.Cavalo;
 import xadrez.pecas.Peao;
+import xadrez.pecas.Rainha;
 import xadrez.pecas.Rei;
 import xadrez.pecas.Torre;
 
@@ -219,6 +220,7 @@ public class PartidaXadrez { // classe principal do sistema do jogo de xadrez
 		NovaPosicaoPeça('a', 1, new Torre(tabuleiro, Cores.WHITE));
 		NovaPosicaoPeça('b', 1, new Cavalo(tabuleiro, Cores.WHITE));
 		NovaPosicaoPeça('c', 1, new Bispo(tabuleiro, Cores.WHITE));
+		NovaPosicaoPeça('d', 1, new Rainha(tabuleiro, Cores.WHITE));
 		NovaPosicaoPeça('e', 1, new Rei(tabuleiro, Cores.WHITE));
 		NovaPosicaoPeça('f', 1, new Bispo(tabuleiro, Cores.WHITE));
 		NovaPosicaoPeça('g', 1, new Cavalo(tabuleiro, Cores.WHITE));
@@ -236,6 +238,7 @@ public class PartidaXadrez { // classe principal do sistema do jogo de xadrez
 		NovaPosicaoPeça('a', 8, new Torre(tabuleiro, Cores.BLACK));
 		NovaPosicaoPeça('b', 8, new Cavalo(tabuleiro, Cores.BLACK));
 		NovaPosicaoPeça('c', 8, new Bispo(tabuleiro, Cores.BLACK));
+		NovaPosicaoPeça('d', 8, new Rainha(tabuleiro, Cores.BLACK));
 		NovaPosicaoPeça('e', 8, new Rei(tabuleiro, Cores.BLACK));
 		NovaPosicaoPeça('f', 8, new Bispo(tabuleiro, Cores.BLACK));
 		NovaPosicaoPeça('g', 8, new Cavalo(tabuleiro, Cores.BLACK));
