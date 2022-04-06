@@ -29,7 +29,6 @@ public abstract class Peça {
 	// método responder por informar se existe pelo menos um movimento possivel para essa peça
 	public boolean ExisteAlgumMovimentoPossivel() {
 		boolean[][] mat = movimentosPossiveis();
-		
 		for(int i=0; i<mat.length; i++) {
 			for(int j=0; j<mat.length;j++) {
 				if(mat[i][j]) {
