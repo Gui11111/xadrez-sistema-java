@@ -21,6 +21,7 @@ public class PartidaXadrez { // classe principal do sistema do jogo de xadrez
 	private Tabuleiro tabuleiro;
 	private boolean check;
 	private boolean checkMate;
+	private PeçaXadrez enPassant;
 
 	private List<Peça> peçasDoTabuleiro = new ArrayList<>();
 	private List<Peça> capturaPeças = new ArrayList<>();
@@ -47,6 +48,10 @@ public class PartidaXadrez { // classe principal do sistema do jogo de xadrez
 
 	public boolean getCheckMate() {
 		return checkMate;
+	}
+
+	public PeçaXadrez getEnPassant() {
+		return enPassant;
 	}
 
 	public PeçaXadrez[][] getPeça() { // método que retorna uma matriz correspondente a PartidaXadrez
@@ -83,6 +88,8 @@ public class PartidaXadrez { // classe principal do sistema do jogo de xadrez
 			throw new ExcecaoXadrez("Voce nao pode se colocar em check");
 		}
 
+		PeçaXadrez peçaMovida = (PeçaXadrez) tabuleiro.peça(destino);
+
 		// testar se o oponente ficou em check
 		check = (testaCheck(oponente(jogadorAtual))) ? true : false;
 
@@ -91,6 +98,14 @@ public class PartidaXadrez { // classe principal do sistema do jogo de xadrez
 			checkMate = true;
 		} else {
 			proximoTurno();
+		}
+
+		// testar se a peça movida foi um peao que moveu duas casas
+		if (peçaMovida instanceof Peao
+				&& (destino.getLinha() == origem.getLinha() - 2 || destino.getLinha() == origem.getLinha() + 2)) {
+			enPassant = peçaMovida;
+		} else {
+			enPassant = null;
 		}
 
 		return (PeçaXadrez) capturaPeça;
@@ -126,6 +141,21 @@ public class PartidaXadrez { // classe principal do sistema do jogo de xadrez
 			torre.aumentaContagemMovimentos();
 		}
 
+		// método especial en passant
+		if (p instanceof Peao) {
+			if (origem.getColuna() != destino.getColuna() && peçaCapturada == null) {
+				Posicao posicaoPeao;
+				if (p.getCores() == Cores.WHITE) {
+					posicaoPeao = new Posicao(destino.getLinha() + 1, destino.getColuna());
+				} else {
+					posicaoPeao = new Posicao(destino.getLinha() - 1, destino.getColuna());
+				}
+				peçaCapturada = tabuleiro.removePeça(posicaoPeao);
+				capturaPeças.add(peçaCapturada);
+				peçasDoTabuleiro.remove(peçaCapturada);
+			}
+		}
+
 		return peçaCapturada;
 	}
 
@@ -157,6 +187,20 @@ public class PartidaXadrez { // classe principal do sistema do jogo de xadrez
 			PeçaXadrez torre = (PeçaXadrez) tabuleiro.removePeça(destinoT);
 			tabuleiro.PosicaoPeça(torre, origemT);
 			torre.diminuiContagemMovimentos();
+		}
+
+		// método especial en passant
+		if (p instanceof Peao) {
+			if (origem.getColuna() != destino.getColuna() && capturapeça == enPassant) {
+				PeçaXadrez peao = (PeçaXadrez)tabuleiro.removePeça(destino);
+				Posicao posicaoPeao;
+				if (p.getCores() == Cores.WHITE) {
+					posicaoPeao = new Posicao(3, destino.getColuna());
+				} else {
+					posicaoPeao = new Posicao(4, destino.getColuna());
+				}
+				tabuleiro.PosicaoPeça(peao, posicaoPeao);
+			}
 		}
 
 	}
@@ -262,14 +306,14 @@ public class PartidaXadrez { // classe principal do sistema do jogo de xadrez
 		NovaPosicaoPeça('f', 1, new Bispo(tabuleiro, Cores.WHITE));
 		NovaPosicaoPeça('g', 1, new Cavalo(tabuleiro, Cores.WHITE));
 		NovaPosicaoPeça('h', 1, new Torre(tabuleiro, Cores.WHITE));
-		NovaPosicaoPeça('a', 2, new Peao(tabuleiro, Cores.WHITE));
-		NovaPosicaoPeça('b', 2, new Peao(tabuleiro, Cores.WHITE));
-		NovaPosicaoPeça('c', 2, new Peao(tabuleiro, Cores.WHITE));
-		NovaPosicaoPeça('d', 2, new Peao(tabuleiro, Cores.WHITE));
-		NovaPosicaoPeça('e', 2, new Peao(tabuleiro, Cores.WHITE));
-		NovaPosicaoPeça('f', 2, new Peao(tabuleiro, Cores.WHITE));
-		NovaPosicaoPeça('g', 2, new Peao(tabuleiro, Cores.WHITE));
-		NovaPosicaoPeça('h', 2, new Peao(tabuleiro, Cores.WHITE));
+		NovaPosicaoPeça('a', 2, new Peao(tabuleiro, Cores.WHITE, this));
+		NovaPosicaoPeça('b', 2, new Peao(tabuleiro, Cores.WHITE, this));
+		NovaPosicaoPeça('c', 2, new Peao(tabuleiro, Cores.WHITE, this));
+		NovaPosicaoPeça('d', 2, new Peao(tabuleiro, Cores.WHITE, this));
+		NovaPosicaoPeça('e', 2, new Peao(tabuleiro, Cores.WHITE, this));
+		NovaPosicaoPeça('f', 2, new Peao(tabuleiro, Cores.WHITE, this));
+		NovaPosicaoPeça('g', 2, new Peao(tabuleiro, Cores.WHITE, this));
+		NovaPosicaoPeça('h', 2, new Peao(tabuleiro, Cores.WHITE, this));
 
 		NovaPosicaoPeça('a', 8, new Torre(tabuleiro, Cores.BLACK));
 		NovaPosicaoPeça('b', 8, new Cavalo(tabuleiro, Cores.BLACK));
@@ -279,13 +323,13 @@ public class PartidaXadrez { // classe principal do sistema do jogo de xadrez
 		NovaPosicaoPeça('f', 8, new Bispo(tabuleiro, Cores.BLACK));
 		NovaPosicaoPeça('g', 8, new Cavalo(tabuleiro, Cores.BLACK));
 		NovaPosicaoPeça('h', 8, new Torre(tabuleiro, Cores.BLACK));
-		NovaPosicaoPeça('a', 7, new Peao(tabuleiro, Cores.BLACK));
-		NovaPosicaoPeça('b', 7, new Peao(tabuleiro, Cores.BLACK));
-		NovaPosicaoPeça('c', 7, new Peao(tabuleiro, Cores.BLACK));
-		NovaPosicaoPeça('d', 7, new Peao(tabuleiro, Cores.BLACK));
-		NovaPosicaoPeça('e', 7, new Peao(tabuleiro, Cores.BLACK));
-		NovaPosicaoPeça('f', 7, new Peao(tabuleiro, Cores.BLACK));
-		NovaPosicaoPeça('g', 7, new Peao(tabuleiro, Cores.BLACK));
-		NovaPosicaoPeça('h', 7, new Peao(tabuleiro, Cores.BLACK));
+		NovaPosicaoPeça('a', 7, new Peao(tabuleiro, Cores.BLACK, this));
+		NovaPosicaoPeça('b', 7, new Peao(tabuleiro, Cores.BLACK, this));
+		NovaPosicaoPeça('c', 7, new Peao(tabuleiro, Cores.BLACK, this));
+		NovaPosicaoPeça('d', 7, new Peao(tabuleiro, Cores.BLACK, this));
+		NovaPosicaoPeça('e', 7, new Peao(tabuleiro, Cores.BLACK, this));
+		NovaPosicaoPeça('f', 7, new Peao(tabuleiro, Cores.BLACK, this));
+		NovaPosicaoPeça('g', 7, new Peao(tabuleiro, Cores.BLACK, this));
+		NovaPosicaoPeça('h', 7, new Peao(tabuleiro, Cores.BLACK, this));
 	}
 }
