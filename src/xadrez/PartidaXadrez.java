@@ -1,5 +1,6 @@
 package xadrez;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,6 +23,7 @@ public class PartidaXadrez { // classe principal do sistema do jogo de xadrez
 	private boolean check;
 	private boolean checkMate;
 	private PeçaXadrez enPassant;
+	private PeçaXadrez promocao;
 
 	private List<Peça> peçasDoTabuleiro = new ArrayList<>();
 	private List<Peça> capturaPeças = new ArrayList<>();
@@ -52,6 +54,10 @@ public class PartidaXadrez { // classe principal do sistema do jogo de xadrez
 
 	public PeçaXadrez getEnPassant() {
 		return enPassant;
+	}
+
+	public PeçaXadrez getPromocao() {
+		return promocao;
 	}
 
 	public PeçaXadrez[][] getPeça() { // método que retorna uma matriz correspondente a PartidaXadrez
@@ -90,6 +96,15 @@ public class PartidaXadrez { // classe principal do sistema do jogo de xadrez
 
 		PeçaXadrez peçaMovida = (PeçaXadrez) tabuleiro.peça(destino);
 
+		// método especial promocao
+		promocao = null;
+		if(peçaMovida instanceof Peao) {
+			if((peçaMovida.getCores() == Cores.WHITE && destino.getLinha() == 0) || peçaMovida.getCores() == Cores.BLACK && destino.getLinha() == 7) {
+				promocao = (PeçaXadrez)tabuleiro.peça(destino);
+				promocao = substituiPeçaPromovida("A");
+			}
+		}
+		
 		// testar se o oponente ficou em check
 		check = (testaCheck(oponente(jogadorAtual))) ? true : false;
 
@@ -111,6 +126,34 @@ public class PartidaXadrez { // classe principal do sistema do jogo de xadrez
 		return (PeçaXadrez) capturaPeça;
 	}
 
+	
+	public PeçaXadrez substituiPeçaPromovida(String tipo) {
+		if(promocao == null) {
+			throw new IllegalStateException("Nao ha peca para ser promovida");
+		}
+		if(!tipo.equals("B") && !tipo.equals("C") && !tipo.equals("T") && !tipo.equals("A")) {
+			throw new InvalidParameterException("tipo de promocao invalido");
+		}
+		
+		Posicao pos = promocao.getPosicaoXadrez().toPosition();
+		Peça p = tabuleiro.removePeça(pos);
+		peçasDoTabuleiro.remove(p);
+		
+		PeçaXadrez novaPeça = novaPeça(tipo, promocao.getCores());
+		tabuleiro.PosicaoPeça(novaPeça, pos);
+		peçasDoTabuleiro.add(novaPeça);
+		
+		return novaPeça;
+		
+	}
+	// método auxiliar para instanciar a peça
+	private PeçaXadrez novaPeça(String tipo, Cores cor) {
+		if(tipo.equals("B")) return new Bispo(tabuleiro, cor);
+		if(tipo.equals("C")) return new Cavalo(tabuleiro, cor);
+		if(tipo.equals("T")) return new Torre(tabuleiro, cor);
+		return new Rainha(tabuleiro, cor);
+	}
+	
 	// método para fazer movimento
 	private Peça fazerMover(Posicao origem, Posicao destino) {
 		PeçaXadrez p = (PeçaXadrez) tabuleiro.removePeça(origem);
